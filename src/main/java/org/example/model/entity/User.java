@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Table(name = "users")
 @Entity
@@ -24,13 +26,13 @@ public class User {
     private String fullName;
     private String role;
 
-//    @OneToMany(mappedBy = "client")
-//    private List<Booking> bookings;
-//
-//    @OneToMany(mappedBy = "owner")
-//    private List<Car> cars;
-//
-//    @OneToMany(mappedBy = "user")
-//    private List<Review> reviews;
+    @OneToMany(mappedBy = "user")
+    private List<Booking> bookings;
+
+    @OneToMany(mappedBy = "user")
+    private List<Car> cars;
+
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews;
 
 }

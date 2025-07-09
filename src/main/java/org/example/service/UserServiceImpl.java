@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.example.exception.UserNotFoundException;
 import org.example.model.Mapper;
 import org.example.model.dto.UserDto;
-import org.example.model.dto.UserResponceDto;
 import org.example.model.entity.User;
 import org.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +29,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDto getUserById(Integer id) {
+    public UserDto getUserDtoById(Integer id) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User does not exists!!!"));
         return mapper.userFromEntityToDto(user);
     }
@@ -63,15 +61,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<UserResponceDto> getAllUsers() {
-
-        return userRepository.findAll()
-                .stream()
-                .map(user -> UserResponceDto.builder()
-                        .id(user.getId())
-                        .email(user.getEmail())
-                        .fullName(user.getFullName())
-                        .role(user.getRole())
-                        .build()).toList();
+    public User getUserById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(()-> new UserNotFoundException("User does not exists!!"));
     }
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Table(name = "cars")
 @Entity
@@ -27,9 +28,6 @@ public class Car {
     @ManyToOne
     private User user;
 
-//    @OneToMany(mappedBy = "car")
-//    private List<Review> reviews;
-//
-//    @OneToMany(mappedBy = "car")
-//    private List<Booking> bookings;
+    @OneToMany(mappedBy = "car")
+    private List<Review> reviews;
 }

@@ -2,7 +2,6 @@ package org.example.model.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import org.example.model.entity.User;
 
 import java.math.BigDecimal;
 
@@ -14,5 +13,5 @@ public class CarDto {
     private String model;
     private String location;
     private BigDecimal pricePerDay;
-    private User user;
+    private UserDto user;
 }

@@ -2,11 +2,9 @@ package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.model.dto.UserDto;
-import org.example.model.dto.UserResponceDto;
 import org.example.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -26,7 +24,7 @@ public class UserController {
     public UserDto getUserById(
             @PathVariable Integer id
     ){
-        return userService.getUserById(id);
+        return userService.getUserDtoById(id);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -41,10 +39,5 @@ public class UserController {
             @PathVariable Integer id, @RequestBody UserDto userDto
     ){
         return userService.updateUserById(id, userDto);
-    }
-
-    @GetMapping("/all")
-    public List<UserResponceDto> getAllUsers(){
-        return userService.getAllUsers();
     }
 }

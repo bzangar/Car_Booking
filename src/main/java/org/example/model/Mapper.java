@@ -1,13 +1,18 @@
 package org.example.model;
 
+import org.example.model.dto.BookingDto;
 import org.example.model.dto.CarDto;
+import org.example.model.dto.ReviewDto;
 import org.example.model.dto.UserDto;
+import org.example.model.entity.Booking;
 import org.example.model.entity.Car;
+import org.example.model.entity.Review;
 import org.example.model.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Mapper {
+
     public UserDto userFromEntityToDto(User user){
         return UserDto.builder()
                 .id(user.getId())
@@ -35,7 +40,28 @@ public class Mapper {
                 .brand(car.getBrand())
                 .pricePerDay(car.getPricePerDay())
                 .location(car.getLocation())
-                .user(car.getUser())
+                .user(userFromEntityToDto(car.getUser()))
+                .build();
+    }
+
+    public BookingDto bookingFromEntityToDto(Booking booking){
+        return BookingDto.builder()
+                .id(booking.getId())
+                .car(carFromEntityToDto(booking.getCar()))
+                .user(userFromEntityToDto(booking.getUser()))
+                .startTime(booking.getStartTime())
+                .endTime(booking.getEndTime())
+                .status(booking.getStatus())
+                .build();
+    }
+
+    public ReviewDto reviewFromEntityToDto(Review review){
+        return ReviewDto.builder()
+                .id(review.getId())
+                .car(carFromEntityToDto(review.getCar()))
+                .user(userFromEntityToDto(review.getUser()))
+                .comment(review.getComment())
+                .rating(review.getRating())
                 .build();
     }
 }
