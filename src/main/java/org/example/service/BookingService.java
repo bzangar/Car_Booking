@@ -1,16 +1,20 @@
 package org.example.service;
 
 import org.example.model.dto.BookingDto;
+import org.example.model.dto.BookingResponseDto;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface BookingService {
-    BookingDto createBooking(BookingDto bookingDto);
+    BookingResponseDto createBooking(BookingDto bookingDto);
 
-    BookingDto getBookingById(Integer id);
+    BookingResponseDto getBookingById(Integer id);
 
-    BookingDto changeTheStatus(Integer id, BookingDto bookingDto);
+    BookingResponseDto changeTheStatus(Integer id, BookingDto bookingDto);
 
-    List<BookingDto> getAllBookingsByUserId(Integer userId);
+    List<BookingResponseDto> getAllBookingsByUserId(Integer userId);
+
+    BigDecimal calculatePrice(BookingDto bookingDto);
 }

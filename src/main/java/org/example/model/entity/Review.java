@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Table(name = "reviews")
 @Entity
 @Data
@@ -26,4 +27,6 @@ public class Review {
     @ManyToOne
     private Car car;
     private Integer rating;
+
+
 }

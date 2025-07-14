@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ReviewController {
     final private ReviewService reviewService;
@@ -20,10 +20,10 @@ public class ReviewController {
         return reviewService.createReview(carId, reviewDto);
     }
 
-    @GetMapping("/cars/{id}/reviews")
+    @GetMapping("/cars/{carId}/reviews")
     public List<ReviewDto> getReviewById(
-            @PathVariable Integer id
+            @PathVariable Integer carId
     ){
-        return reviewService.getReviewsByCarId(id);
+        return reviewService.getReviewsByCarId(carId);
     }
 }

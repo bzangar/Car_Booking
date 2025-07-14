@@ -28,6 +28,9 @@ public class Car {
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "car")
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
 }

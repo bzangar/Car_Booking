@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bookings</title>
+      <style>
+    .booking {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background-color: #f0f0f0;
+        border-top: 1px solid #ccc;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 1000;
+    }
+    .bottom-nav button {
+        background: none;
+        border: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .bottom-nav button:hover {
+        background-color: #ddd;
+        border-radius: 5px;
+    }
+    </style>
+    <style>
+        #booking-list {
+            padding-bottom: 80px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bottom-nav">
+    <button onclick="window.location.href='/cars.html'">Cars</button>
+    <button onclick="window.location.href='/bookings.html'">Bookings</button>
+    <button onclick="window.location.href='/profile.html'">Profile</button>
+    </div>
+    <h1>Bookings</h1>
+    <div id="booking-list"></div>
+
+    <script>
+        fetch('http://localhost:8080/api/users/1/bookings')
+        .then(response => response.json())
+        .then(data => {
+            const bookingListDiv = document.getElementById('booking-list');
+
+            data.forEach(booking => {
+                const bookingDiv = document.createElement('div');
+                bookingDiv.classList.add('booking');
+
+                bookingDiv.innerHTML = `
+                <p> ${booking.id} </p>
+                <p> ${booking.user.fullName} </p>
+                <p> car: ${booking.car.brand} ${booking.car.model}</p>
+                <p> start time: ${booking.startTime} </p>
+                <p> end time: ${booking.endTime} </p>
+                <p> Total price: ${booking.totalPrice} </p>
+                <p> ${booking.status} </p>
+                `;
+                bookingListDiv.appendChild(bookingDiv);
+            });
+        })
+        .catch(error => console.error('Error fetching bookings:', error));
+
+
+    </script>
+</body>
+</html>

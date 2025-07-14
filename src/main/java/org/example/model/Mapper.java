@@ -1,9 +1,6 @@
 package org.example.model;
 
-import org.example.model.dto.BookingDto;
-import org.example.model.dto.CarDto;
-import org.example.model.dto.ReviewDto;
-import org.example.model.dto.UserDto;
+import org.example.model.dto.*;
 import org.example.model.entity.Booking;
 import org.example.model.entity.Car;
 import org.example.model.entity.Review;
@@ -49,6 +46,18 @@ public class Mapper {
                 .id(booking.getId())
                 .car(carFromEntityToDto(booking.getCar()))
                 .user(userFromEntityToDto(booking.getUser()))
+                .startTime(booking.getStartTime())
+                .endTime(booking.getEndTime())
+                .status(booking.getStatus())
+                .build();
+    }
+
+    public BookingResponseDto bookingFromEntityToResponseDto(Booking booking){
+        return BookingResponseDto.builder()
+                .id(booking.getId())
+                .car(carFromEntityToDto(booking.getCar()))
+                .user(userFromEntityToDto(booking.getUser()))
+                .totalPrice(booking.getTotalPrice())
                 .startTime(booking.getStartTime())
                 .endTime(booking.getEndTime())
                 .status(booking.getStatus())
