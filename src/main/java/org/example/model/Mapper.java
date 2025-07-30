@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class Mapper {
 
     public UserDto userFromEntityToDto(User user){
+
         return UserDto.builder()
                 .id(user.getId())
                 .email(user.getEmail())
@@ -21,6 +22,7 @@ public class Mapper {
     }
 
     public UserDto userResponceFromEntityToDto(User user){
+
         return UserDto.builder()
                 .id(user.getId())
                 .email(user.getEmail())
@@ -31,6 +33,7 @@ public class Mapper {
     }
 
     public CarDto carFromEntityToDto(Car car){
+
         return CarDto.builder()
                 .id(car.getId())
                 .model(car.getModel())
@@ -42,6 +45,7 @@ public class Mapper {
     }
 
     public BookingDto bookingFromEntityToDto(Booking booking){
+
         return BookingDto.builder()
                 .id(booking.getId())
                 .car(carFromEntityToDto(booking.getCar()))
@@ -53,6 +57,7 @@ public class Mapper {
     }
 
     public BookingResponseDto bookingFromEntityToResponseDto(Booking booking){
+
         return BookingResponseDto.builder()
                 .id(booking.getId())
                 .car(carFromEntityToDto(booking.getCar()))
@@ -65,6 +70,7 @@ public class Mapper {
     }
 
     public ReviewDto reviewFromEntityToDto(Review review){
+
         return ReviewDto.builder()
                 .id(review.getId())
                 .car(carFromEntityToDto(review.getCar()))

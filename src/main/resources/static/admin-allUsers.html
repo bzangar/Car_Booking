@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>All Users</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+      color: #333;
+      padding-bottom: 80px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 28px;
+    }
+
+    #user-list {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .user {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 15px 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .user p {
+      margin: 6px 0;
+      line-height: 1.4;
+    }
+
+    .user button.delete-btn {
+      background-color: #dc3545;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+      transition: background-color 0.2s;
+    }
+
+    .user button.delete-btn:hover {
+      background-color: #c82333;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: #ffffff;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .bottom-nav button {
+      background: none;
+      border: none;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #555;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .bottom-nav button:hover {
+      color: #000;
+    }
+
+    .bottom-nav button.active {
+      color: #007bff;
+      font-weight: 600;
+    }
+
+    .bottom-nav button span {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>All Users</h1>
+<div id="user-list"></div>
+
+<div class="bottom-nav">
+  <button onclick="window.location.href='/admin-AllCars.html'">
+    <span>🚗</span>
+    All Cars
+  </button>
+  <button onclick="window.location.href='/admin-bookings.html'">
+    <span>📅</span>
+    Bookings
+  </button>
+  <button class="active" onclick="window.location.href='/admin-allUsers.html'">
+    <span>👤👤</span>
+    All Users
+  </button>
+  <button onclick="window.location.href='/admin-profile.html'">
+    <span>👤</span>
+    Profile
+  </button>
+</div>
+
+<script>
+  // Fetch and render users
+  fetch('http://localhost:8080/api/users')
+    .then(response => response.json())
+    .then(users => {
+      const userList = document.getElementById('user-list');
+
+      users.forEach(user => {
+        const userDiv = document.createElement('div');
+        userDiv.className = 'user';
+
+        userDiv.innerHTML = `
+          <p><strong>ID:</strong> ${user.id}</p>
+          <p><strong>Full Name:</strong> ${user.fullName}</p>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Role:</strong> ${user.role}</p>
+          <button class="delete-btn" data-user-id="${user.id}">Delete</button>
+        `;
+
+        userList.appendChild(userDiv);
+      });
+
+      // Attach delete handlers
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const userId = this.getAttribute('data-user-id');
+          if (confirm(`Delete user ID ${userId}?`)) {
+            fetch(`http://localhost:8080/api/users/${userId}`, {
+              method: 'DELETE'
+            })
+              .then(res => {
+                if (!res.ok) throw new Error('Failed to delete user');
+                alert('User deleted successfully');
+                location.reload();
+              })
+              .catch(err => {
+                console.error('Delete error:', err);
+                alert('Failed to delete user');
+              });
+          }
+        });
+      });
+    })
+    .catch(err => {
+      console.error('Error fetching users:', err);
+      alert('Could not load users.');
+    });
+</script>
+
+</body>
+</html>

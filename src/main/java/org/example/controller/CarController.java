@@ -18,11 +18,13 @@ public class CarController {
     public CarDto createCar(
             @RequestBody CarDto carDto
     ){
+
       return carService.createCar(carDto);
     }
 
     @GetMapping("")
     public List<CarDto> getAllCars(){
+
         return carService.getAllCar();
     }
 
@@ -30,6 +32,7 @@ public class CarController {
     public CarDto getCarById(
             @PathVariable Integer id
     ){
+
         return carService.getCarDtoById(id);
     }
 
@@ -37,6 +40,7 @@ public class CarController {
     public CarDto editCarById(
             @PathVariable Integer id, @RequestBody CarDto carDto
     ){
+
         return carService.editCar(id, carDto);
     }
 
@@ -44,6 +48,7 @@ public class CarController {
     public boolean deleteCarById(
             @PathVariable Integer id
     ){
+
         return carService.deleteCarById(id);
     }
 

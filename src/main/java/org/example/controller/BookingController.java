@@ -19,6 +19,7 @@ public class BookingController {
     public BookingResponseDto createBooking(
             @RequestBody BookingDto bookingDto
     ){
+
         return bookingService.createBooking(bookingDto);
     }
 
@@ -26,6 +27,7 @@ public class BookingController {
     public BookingResponseDto getBookingById(
             @PathVariable Integer id
     ){
+
         return bookingService.getBookingById(id);
     }
 
@@ -33,6 +35,7 @@ public class BookingController {
     public BookingResponseDto changeStatus(
             @PathVariable Integer id, @RequestBody BookingDto bookingDto
     ){
+
         return bookingService.changeTheStatus(id, bookingDto);
     }
 
@@ -40,6 +43,7 @@ public class BookingController {
     public List<BookingResponseDto> getAllBookingsByUserId(
             @PathVariable Integer id
     ){
+
         return bookingService.getAllBookingsByUserId(id);
     }
 }

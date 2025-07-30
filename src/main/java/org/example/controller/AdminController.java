@@ -19,11 +19,13 @@ public class AdminController {
 
     @GetMapping("/users")
     public List<UserDto> getAllUsers(){
+
         return adminService.getAllUsers();
     }
 
     @GetMapping("/cars")
     public List<CarDto> getAllCars(){
+
         return adminService.getAllCars();
     }
 }

@@ -8,6 +8,8 @@ import org.example.model.entity.User;
 import org.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -25,17 +27,20 @@ public class UserServiceImpl implements UserService{
                 .role(userDto.getRole())
                 .build();
         userRepository.save(user);
+
         return null;
     }
 
     @Override
     public UserDto getUserDtoById(Integer id) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User does not exists!!!"));
+
         return mapper.userFromEntityToDto(user);
     }
 
     @Override
     public boolean deleteUserById(Integer id) {
+
         if(!userRepository.existsById(id)){
             throw new UserNotFoundException("User does not exists!!");
         }
@@ -43,6 +48,7 @@ public class UserServiceImpl implements UserService{
         if(id == null){
             throw new RuntimeException("Id must not be null!!!");
         }
+
         userRepository.deleteById(id);
 
         return true;
@@ -57,12 +63,23 @@ public class UserServiceImpl implements UserService{
         user.setFullName(userDto.getFullName());
         //user.setRole(userDto.getRole());
         userRepository.save(user);
+
         return mapper.userFromEntityToDto(user);
     }
 
     @Override
     public User getUserById(Integer id) {
+
         return userRepository.findById(id)
                 .orElseThrow(()-> new UserNotFoundException("User does not exists!!"));
+    }
+
+    @Override
+    public List<UserDto> getAllUser() {
+
+        return userRepository.findAll()
+                .stream()
+                .map(user -> mapper.userResponceFromEntityToDto(user))
+                .toList();
     }
 }

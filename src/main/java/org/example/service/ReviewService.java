@@ -8,4 +8,6 @@ public interface ReviewService {
     ReviewDto createReview(Integer carId, ReviewDto reviewDto);
 
     List<ReviewDto> getReviewsByCarId(Integer id);
+
+    ReviewDto deleteReviewById(Integer id);
 }

@@ -36,6 +36,7 @@ public class BookingServiceImpl implements BookingService {
                 .status(bookingDto.getStatus())
                 .build();
         bookingRepository.save(booking);
+
         return mapper.bookingFromEntityToResponseDto(booking);
     }
 
@@ -43,6 +44,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingResponseDto getBookingById(Integer id) {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(()-> new BookingNotFoundException("Booking does not exists!!"));
+
         return mapper.bookingFromEntityToResponseDto(booking);
     }
 
@@ -52,11 +54,13 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(()-> new BookingNotFoundException("Booking does not exists!!"));
         booking.setStatus(bookingDto.getStatus());
         bookingRepository.save(booking);
+
         return mapper.bookingFromEntityToResponseDto(booking);
     }
 
     @Override
     public List<BookingResponseDto> getAllBookingsByUserId(Integer userId) {
+
         return bookingRepository.findAllByUserId(userId)
                 .stream()
                 .sorted((booking1, booking2) -> booking2.getId()- booking1.getId())
@@ -73,6 +77,7 @@ public class BookingServiceImpl implements BookingService {
 
         Car car = carService.getCarById(bookingDto.getCar().getId());
         BigDecimal pricePerDay = car.getPricePerDay();
+
         if(pricePerDay == null){
             throw new IllegalStateException("Car pricePerDay is null");
         }

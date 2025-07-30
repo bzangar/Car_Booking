@@ -17,6 +17,7 @@ public class ReviewController {
     public ReviewDto createReview(
             @PathVariable Integer carId, @RequestBody ReviewDto reviewDto
     ){
+
         return reviewService.createReview(carId, reviewDto);
     }
 
@@ -24,6 +25,13 @@ public class ReviewController {
     public List<ReviewDto> getReviewById(
             @PathVariable Integer carId
     ){
+
         return reviewService.getReviewsByCarId(carId);
+    }
+
+    @DeleteMapping("/reviews/{id}")
+    public ReviewDto deleteReviewById(@PathVariable Integer id){
+
+        return reviewService.deleteReviewById(id);
     }
 }

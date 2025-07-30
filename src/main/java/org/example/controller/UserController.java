@@ -5,6 +5,8 @@ import org.example.model.dto.UserDto;
 import org.example.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -13,31 +15,41 @@ public class UserController {
 
     final private UserService userService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public UserDto createUser(
             @RequestBody UserDto userDto
     ){
+
         return userService.crateUser(userDto);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public UserDto getUserById(
             @PathVariable Integer id
     ){
+
         return userService.getUserDtoById(id);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @GetMapping()
+    public List<UserDto> getAllUser(){
+
+        return userService.getAllUser();
+    }
+
+    @DeleteMapping("/{id}")
     public boolean deleteUserById(
             @PathVariable Integer id
     ){
+
         return userService.deleteUserById(id);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public UserDto updateUserById(
             @PathVariable Integer id, @RequestBody UserDto userDto
     ){
+
         return userService.updateUserById(id, userDto);
     }
 }

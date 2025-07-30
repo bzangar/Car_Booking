@@ -1,0 +1,87 @@
+@Table(name = "users")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String email;
+    private String password;
+
+    @Column(name = "full_name")
+    private String fullName;
+    private String role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Booking> bookings;
+
+    @OneToMany(mappedBy = "user")
+    private List<Car> cars;
+
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews;
+}
+
+
+
+@Entity
+public class Car {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String brand;
+    private String model;
+    private String location;
+    private BigDecimal pricePerDay;
+
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
+
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
+}
+
+
+
+@Table(name = "bookings")
+public class Booking {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
+
+    @JoinColumn(name = "car_id")
+    @ManyToOne
+    private Car car;
+    private BigDecimal totalPrice;
+    private LocalDate startTime;
+    private LocalDate endTime;
+    private String status;
+}
+
+
+
+@Table(name = "reviews")
+@Entity
+public class Review {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String comment;
+
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
+
+    @JoinColumn(name = "car_id")
+    @ManyToOne
+    private Car car;
+    private Integer rating;
+
+
+}

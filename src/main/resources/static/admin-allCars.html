@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Car List</title>
+  <title>All Car List</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -132,15 +132,19 @@
 <div id="car-list"></div>
 
 <div class="bottom-nav">
-  <button class="active" onclick="window.location.href='/cars.html'">
+  <button class="active" onclick="window.location.href='/admin-AllCars.html'">
     <span>🚗</span>
-    Cars
+    All Cars
   </button>
-  <button onclick="window.location.href='/bookings.html'">
+  <button onclick="window.location.href='/admin-bookings.html'">
     <span>📅</span>
     Bookings
   </button>
-  <button onclick="window.location.href='/profile.html'">
+  <button onclick="window.location.href='/admin-allUsers.html'">
+    <span>👤👤</span>
+    All Users
+  </button>
+  <button onclick="window.location.href='/admin-profile.html'">
     <span>👤</span>
     Profile
   </button>
@@ -170,16 +174,18 @@
             <input type="date" id="${startId}" required>
 
             <label for="${endId}">End date:</label>
-            <input type="date" id="${endId}" required><br>
+            <input type="date" id="${endId}" required><br><br>
 
             <button class="book-btn" data-car-id="${car.id}" type="button">Book</button>
-            <button class="reviews-btn" type="button" onclick="window.location.href='/reviews.html?carId=${car.id}'">Reviews</button>
+            <button class="reviews-btn" type="button" onclick="window.location.href='/admin-reviews.html?carId=${car.id}'">Reviews</button>
+            <button class="delete-btn" data-car-id="${car.id}" type="button" style="background-color: #dc3545; color: white;">Delete</button>
           </form>
         `;
 
         carListDiv.appendChild(carDiv);
       });
 
+      // Book button logic
       document.querySelectorAll('.book-btn').forEach(button => {
         button.addEventListener('click', function () {
           const carId = this.getAttribute('data-car-id');
@@ -214,9 +220,31 @@
         });
       });
 
+      // Delete button logic
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const carId = this.getAttribute('data-car-id');
+          if (confirm(`Are you sure you want to delete car #${carId}?`)) {
+            fetch(`http://localhost:8080/api/cars/${carId}`, {
+              method: 'DELETE'
+            })
+              .then(response => {
+                if (!response.ok) throw new Error("Delete failed");
+                alert("Car deleted successfully.");
+                location.reload();
+              })
+              .catch(error => {
+                console.error("Delete error:", error);
+                alert("Failed to delete car.");
+              });
+          }
+        });
+      });
+
     })
     .catch(error => console.error('Error fetching cars:', error));
 </script>
+
 
 </body>
 </html>

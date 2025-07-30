@@ -28,11 +28,13 @@ public class CarServiceImpl implements CarService{
                 .user(userService.getUserById(carDto.getUser().getId()))
                 .build();
         carRepository.save(car);
+
         return mapper.carFromEntityToDto(car);
     }
 
     @Override
     public List<CarDto> getAllCar() {
+
         return carRepository.findAll()
                 .stream()
                 .map(car -> CarDto.builder()
@@ -50,6 +52,7 @@ public class CarServiceImpl implements CarService{
     public CarDto getCarDtoById(Integer id) {
         Car car = carRepository.findById(id).
                 orElseThrow(() -> new CarNotFoundException("Car does not exists!!"));
+
         return mapper.carFromEntityToDto(car);
     }
 
@@ -69,19 +72,23 @@ public class CarServiceImpl implements CarService{
 
     @Override
     public boolean deleteCarById(Integer id) {
+
         if(!carRepository.existsById(id)){
             throw new CarNotFoundException("Car does not exists!!!");
         }
+
         if(id == null){
             throw new RuntimeException("Id must not be null!!!");
         }
 
         carRepository.deleteById(id);
+
         return true;
     }
 
     @Override
     public Car getCarById(Integer id) {
+
         return carRepository.findById(id)
                 .orElseThrow(()-> new CarNotFoundException("Car does not exists!!!"));
     }
