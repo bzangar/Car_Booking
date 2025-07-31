@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 public class UserDto {
     private Integer id;
-    private String email;
+    private String username;
     private String password;
     private String fullName;
     private String role;

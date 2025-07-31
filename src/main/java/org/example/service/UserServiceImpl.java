@@ -6,6 +6,7 @@ import org.example.model.Mapper;
 import org.example.model.dto.UserDto;
 import org.example.model.entity.User;
 import org.example.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,15 +17,16 @@ import java.util.List;
 public class UserServiceImpl implements UserService{
 
     final private UserRepository userRepository;
+    final private PasswordEncoder passwordEncoder;
     final private Mapper mapper;
 
     @Override
     public UserDto crateUser(UserDto userDto) {
         User user = User.builder()
-                .email(userDto.getEmail())
-                .password(userDto.getPassword())
+                .username(userDto.getUsername())
+                .password(passwordEncoder.encode(userDto.getPassword()))
                 .fullName(userDto.getFullName())
-                .role(userDto.getRole())
+                .role("USER")
                 .build();
         userRepository.save(user);
 
@@ -58,7 +60,7 @@ public class UserServiceImpl implements UserService{
     public UserDto updateUserById(Integer id, UserDto userDto) {
         User user = userRepository.findById(id).
                 orElseThrow(() -> new UserNotFoundException("User does not exists"));
-        user.setEmail(userDto.getEmail());
+        user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
         user.setFullName(userDto.getFullName());
         //user.setRole(userDto.getRole());

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Вход</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .login-container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        width: 320px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #111827;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+        color: #374151;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 4px;
+        margin-bottom: 15px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #1d4ed8;
+    }
+
+    .link {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .link a {
+        color: #2563eb;
+        text-decoration: none;
+    }
+
+    .link a:hover {
+        text-decoration: underline;
+    }
+
+    #error {
+        color: red;
+        text-align: center;
+        margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h2>Вход</h2>
+
+  <form id="loginForm">
+    <label>
+      Логин:
+      <input type="text" name="username" required>
+    </label>
+
+    <label>
+      Пароль:
+      <input type="password" name="password" required>
+    </label>
+
+    <button type="submit">Войти</button>
+  </form>
+
+  <div class="link">
+    Нет аккаунта? <a href="/register.html">Регистрация</a>
+  </div>
+
+  <p id="error"></p>
+</div>
+
+<script>
+  const form = document.getElementById("loginForm");
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    fetch("/auth/login", {
+        method: "POST",
+        body: formData // НЕ JSON!
+    })
+    .then(response => {
+        if (response.redirected) {
+            window.location.href = response.url;
+        } else {
+            document.getElementById("error").innerText = "Неверный логин или пароль";
+        }
+    })
+    .catch(() => {
+        document.getElementById("error").innerText = "Ошибка подключения к серверу.";
+    });
+});
+</script>
+
+</body>
+</html>
