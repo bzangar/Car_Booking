@@ -26,6 +26,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public UserDto registrationProcess(@RequestBody UserDto userDto){
+
+        if(userService.existsByUsername(userDto.getUsername())){
+            throw new IllegalStateException("Пользователь занят и уже используется");
+        }
+
         userService.crateUser(userDto);
 
         return userDto;

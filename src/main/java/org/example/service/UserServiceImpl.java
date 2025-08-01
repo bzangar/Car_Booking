@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService{
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .fullName(userDto.getFullName())
-                .role("USER")
+                .role("CLIENT")
                 .build();
         userRepository.save(user);
 
@@ -83,5 +83,16 @@ public class UserServiceImpl implements UserService{
                 .stream()
                 .map(user -> mapper.userResponceFromEntityToDto(user))
                 .toList();
+    }
+
+    @Override
+    public boolean existsByUsername(String username){
+
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

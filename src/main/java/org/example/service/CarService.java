@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CarService {
 
-    CarDto createCar(CarDto carDto);
+    CarDto createCar(CarDto carDto, String username);
 
     List<CarDto> getAllCar();
 

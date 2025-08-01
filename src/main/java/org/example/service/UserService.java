@@ -19,4 +19,8 @@ public interface UserService {
     UserDto updateUserById(Integer id, UserDto userDto);
 
     User getUserById(Integer id);
+
+    boolean existsByUsername(String username);
+
+    User getUserByUsername(String username);
 }

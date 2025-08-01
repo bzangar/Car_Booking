@@ -5,6 +5,7 @@ import org.example.exception.CarNotFoundException;
 import org.example.model.Mapper;
 import org.example.model.dto.CarDto;
 import org.example.model.entity.Car;
+import org.example.model.entity.User;
 import org.example.repository.CarRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +20,18 @@ public class CarServiceImpl implements CarService{
     final private UserService userService;
 
     @Override
-    public CarDto createCar(CarDto carDto) {
+    public CarDto createCar(CarDto carDto, String username) {
+        User user = userService.getUserByUsername(username);
+
+        System.out.println("USEEEERNAAAAME: " + username);
+        System.out.println("USEEEER: " + user);
+
         Car car = Car.builder()
                 .brand(carDto.getBrand())
                 .model(carDto.getModel())
                 .location(carDto.getLocation())
                 .pricePerDay(carDto.getPricePerDay())
-                .user(userService.getUserById(carDto.getUser().getId()))
+                .user(user)
                 .build();
         carRepository.save(car);
 

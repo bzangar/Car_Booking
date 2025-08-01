@@ -1,6 +1,8 @@
 package org.example.configuration;
 
 
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.example.model.entity.User;
 import org.example.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +17,10 @@ import org.springframework.security.web.SecurityFilterChain;
 
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfiguration {
+
+    final private CustomLoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
@@ -31,8 +36,16 @@ public class SecurityConfiguration {
                 .formLogin(form -> form
                         .loginPage("/login.html")              // собственная HTML-страница логина
                         .loginProcessingUrl("/auth/login")// URL для отправки формы
-                        .defaultSuccessUrl("/cars.html") // куда перенаправлять после успешного входа
+                        //.defaultSuccessUrl("/cars.html") // куда перенаправлять после успешного входа
+                        .successHandler(loginSuccessHandler)
                         .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout") // URL для выхода
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.getWriter().write("Logged out successfully");
+                        })
                 )
                 .build();
     }

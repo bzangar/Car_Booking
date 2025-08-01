@@ -116,7 +116,6 @@
     .bottom-nav button span {
       font-size: 20px;
     }
-
     .logout-button {
       position: absolute;
       top: 20px;
@@ -134,11 +133,12 @@
     .logout-button:hover {
       background-color: #c82333;
     }
+
   </style>
 </head>
 <body>
-
 <button class="logout-button" onclick="logout()">Logout</button>
+
 
 <h1>Profile</h1>
 
@@ -159,19 +159,15 @@
 </form>
 
 <div class="bottom-nav">
-  <button class="active" onclick="window.location.href='/admin-AllCars.html'">
+  <button onclick="window.location.href='/owner-cars.html'">
     <span>🚗</span>
-    All Cars
+    Cars
   </button>
-  <button onclick="window.location.href='/admin-bookings.html'">
+  <button onclick="window.location.href='/owner-bookings.html'">
     <span>📅</span>
     Bookings
   </button>
-  <button onclick="window.location.href='/admin-allUsers.html'">
-    <span>👤👤</span>
-    All Users
-  </button>
-  <button onclick="window.location.href='/admin-profile.html'">
+  <button class="active" onclick="window.location.href='/owner-profile.html'">
     <span>👤</span>
     Profile
   </button>
