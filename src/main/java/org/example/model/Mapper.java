@@ -17,7 +17,7 @@ public class Mapper {
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .fullName(user.getFullName())
-                .role(user.getRole())
+                .role(String.valueOf(user.getRole()))
                 .build();
     }
 
@@ -28,7 +28,7 @@ public class Mapper {
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .fullName(user.getFullName())
-                .role(user.getRole())
+                .role(String.valueOf(user.getRole()))
                 .build();
     }
 

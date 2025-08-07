@@ -1,70 +1,62 @@
 package org.example.configuration;
 
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.model.entity.User;
-import org.example.repository.UserRepository;
+import org.example.configuration.filters.JwtAuthFilter;
+import org.example.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    final private CustomLoginSuccessHandler loginSuccessHandler;
+    private final JwtAuthFilter jwtAuthFilter;
+    private final UserService userService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        return http.authorizeHttpRequests(auth->
-                        auth.requestMatchers("admin-*html").hasRole("ADMIN")
-                                .requestMatchers("/auth/register",
-                                        "/login.html",
-                                        "register.html").permitAll()
+
+        http.authorizeHttpRequests(auth->
+                        auth.requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+
                                 .anyRequest().authenticated())
 
-                .csrf(csrf -> csrf.disable())
-                //.formLogin(Customizer.withDefaults()) // чтобы видеть дефолтный логин страницу
-                .formLogin(form -> form
-                        .loginPage("/login.html")              // собственная HTML-страница логина
-                        .loginProcessingUrl("/auth/login")// URL для отправки формы
-                        //.defaultSuccessUrl("/cars.html") // куда перенаправлять после успешного входа
-                        .successHandler(loginSuccessHandler)
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/auth/logout") // URL для выхода
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setStatus(HttpServletResponse.SC_OK);
-                            response.getWriter().write("Logged out successfully");
-                        })
-                )
-                .build();
+                .csrf(AbstractHttpConfigurer::disable)
+                .authenticationProvider(authenticationProvider())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository){
-
-        return username -> {
-            User user = userRepository.findByUsername(username);
-            if(user != null) return user;
-
-            throw new UsernameNotFoundException("User '" +  username + "' not found");
-        };
-
-
+    public DaoAuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

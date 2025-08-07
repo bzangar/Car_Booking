@@ -9,3 +9,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+jwt:
+  secret: YW55d2hlcmVyYWlzZXNhaWxiZXR3ZWVuYXZlcmFnZW1vcm5pbmdwYXNzYWdlc2hlZXQ=
+  expiration: 86400000 #срок годности токена в миллисекундах

@@ -2,13 +2,12 @@ package org.example.service;
 
 import org.example.model.dto.UserDto;
 import org.example.model.entity.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
 
-public interface UserService {
-
-    UserDto crateUser(UserDto userDto);
+public interface UserService extends UserDetailsService {
 
     UserDto getUserDtoById(Integer id);
 
@@ -20,7 +19,7 @@ public interface UserService {
 
     User getUserById(Integer id);
 
-    boolean existsByUsername(String username);
-
     User getUserByUsername(String username);
+
+
 }

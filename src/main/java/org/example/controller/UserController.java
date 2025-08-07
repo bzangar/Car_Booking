@@ -15,13 +15,6 @@ public class UserController {
 
     final private UserService userService;
 
-    @PostMapping()
-    public UserDto createUser(
-            @RequestBody UserDto userDto
-    ){
-
-        return userService.crateUser(userDto);
-    }
 
     @GetMapping("/{id}")
     public UserDto getUserById(
