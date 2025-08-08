@@ -3,6 +3,8 @@ package org.example.service;
 import lombok.RequiredArgsConstructor;
 import org.example.exception.UserNotFoundException;
 import org.example.model.Mapper;
+import org.example.model.dto.LoginUserDto;
+import org.example.model.dto.RegisterUserDto;
 import org.example.model.dto.UserDto;
 import org.example.model.entity.User;
 import org.example.repository.UserRepository;
@@ -21,6 +23,7 @@ public class UserServiceImpl implements UserService{
 
     final private UserRepository userRepository;
     final private Mapper mapper;
+    final private JwtService jwtService;
 
 
     @Override
@@ -91,5 +94,56 @@ public class UserServiceImpl implements UserService{
                 user.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
         );
+    }
+
+
+
+
+
+
+    @Override
+    public RegisterUserDto getCurrentUser(UserDetails userDetails) {
+        User user = getUserByUsername(userDetails.getUsername());
+        RegisterUserDto result = RegisterUserDto.builder()
+                .fullName(user.getFullName())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .build();
+
+        return result;
+    }
+
+    @Override
+    public RegisterUserDto updateCurrentUser(UserDetails userDetails, RegisterUserDto registerUserDto) {
+        User user = getUserByUsername(userDetails.getUsername());
+        System.out.println("1; " + registerUserDto);
+
+        user.setUsername(registerUserDto.getUsername());
+        user.setPassword(registerUserDto.getPassword());
+        user.setFullName(registerUserDto.getFullName());
+        userRepository.save(user);
+        System.out.println(user);
+
+        RegisterUserDto result = RegisterUserDto.builder()
+                .fullName(user.getFullName())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .build();
+
+        return result;
+    }
+
+    @Override
+    public RegisterUserDto deleteCurrentUser(UserDetails userDetails) {
+        User user = getUserByUsername(userDetails.getUsername());
+        RegisterUserDto result = RegisterUserDto.builder()
+                .fullName(user.getFullName())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .build();
+
+        userRepository.delete(user);
+
+        return result;
     }
 }
