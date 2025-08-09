@@ -31,6 +31,12 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(auth->
                         auth.requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/cars").hasRole("OWNER")
+                                .requestMatchers(HttpMethod.PUT, "/api/cars/**").hasRole("OWNER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/cars/**").hasRole("OWNER")
+
+                                .requestMatchers(HttpMethod.PUT, "/api/bookings/**").hasRole("OWNER")
+                                .requestMatchers(HttpMethod.POST, "/api/booking").authenticated()
 
                                 .anyRequest().authenticated())
 

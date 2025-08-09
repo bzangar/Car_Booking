@@ -24,11 +24,14 @@ public class Car {
 
     @JoinColumn(name = "user_id")
     @ManyToOne
+    @ToString.Exclude
     private User user;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Booking> bookings;
 }

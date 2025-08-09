@@ -21,15 +21,14 @@ public class CarController {
 
     final private CarService carService;
 
+    /// //////
     @PostMapping()
     public CarDto createCar(
             @RequestBody CarDto carDto , @AuthenticationPrincipal UserDetails userDetails
             )
     {
-        String username = userDetails.getUsername();
-        System.out.println("USERNAME FROM CONTEXT: " + username);
 
-        return carService.createCar(carDto, username);
+        return carService.createCar(carDto, userDetails);
     }
 
     @GetMapping()
@@ -47,6 +46,7 @@ public class CarController {
         return carService.getCarDtoById(id);
     }
 
+    /// //////
     @PutMapping("/{id}")
     public CarDto editCarById(
             @PathVariable Integer id, @RequestBody CarDto carDto)
@@ -55,6 +55,7 @@ public class CarController {
         return carService.editCar(id, carDto);
     }
 
+    /// //////
     @DeleteMapping("/{id}")
     public boolean deleteCarById(
             @PathVariable Integer id)

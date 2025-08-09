@@ -7,7 +7,9 @@ import org.example.model.dto.BookingDto;
 import org.example.model.dto.BookingResponseDto;
 import org.example.model.entity.Booking;
 import org.example.model.entity.Car;
+import org.example.model.entity.User;
 import org.example.repository.BookingRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 
@@ -26,14 +28,17 @@ public class BookingServiceImpl implements BookingService {
     final private Mapper mapper;
 
     @Override
-    public BookingResponseDto createBooking(BookingDto bookingDto) {
+    public BookingResponseDto createBooking(BookingDto bookingDto, UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        User user = userService.getUserByUsername(username);
+
         Booking booking = Booking.builder()
                 .car(carService.getCarById(bookingDto.getCar().getId()))
-                .user(userService.getUserById(bookingDto.getUser().getId()))
+                .user(user)
                 .totalPrice(calculatePrice(bookingDto))
                 .endTime(bookingDto.getEndTime())
                 .startTime(bookingDto.getStartTime())
-                .status(bookingDto.getStatus())
+                .status("В ожидании")
                 .build();
         bookingRepository.save(booking);
 
@@ -83,5 +88,15 @@ public class BookingServiceImpl implements BookingService {
         }
 
         return BigDecimal.valueOf(days).multiply(pricePerDay);
+    }
+
+    @Override
+    public List<BookingResponseDto> getAllBookingsByUserDetails(UserDetails userDetails) {
+        String username = userDetails.getUsername();
+
+        return bookingRepository.findByUserUsername(username)
+                .stream()
+                .map(booking -> mapper.bookingFromEntityToResponseDto(booking))
+                .toList();
     }
 }

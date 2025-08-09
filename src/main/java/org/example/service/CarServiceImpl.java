@@ -7,6 +7,7 @@ import org.example.model.dto.CarDto;
 import org.example.model.entity.Car;
 import org.example.model.entity.User;
 import org.example.repository.CarRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,8 @@ public class CarServiceImpl implements CarService{
     final private UserService userService;
 
     @Override
-    public CarDto createCar(CarDto carDto, String username) {
+    public CarDto createCar(CarDto carDto, UserDetails userDetails) {
+        String username = userDetails.getUsername();
         User user = userService.getUserByUsername(username);
 
         System.out.println("USEEEERNAAAAME: " + username);
@@ -64,13 +66,13 @@ public class CarServiceImpl implements CarService{
 
     @Override
     public CarDto editCar(Integer id, CarDto carDto) {
+
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> new CarNotFoundException("Car does not exists!!!"));
         car.setBrand(carDto.getBrand());
         car.setModel(carDto.getModel());
         car.setLocation(carDto.getLocation());
         car.setPricePerDay(carDto.getPricePerDay());
-        car.setUser(userService.getUserById(carDto.getUser().getId()));
         carRepository.save(car);
 
         return mapper.carFromEntityToDto(car);

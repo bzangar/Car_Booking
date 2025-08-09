@@ -2,12 +2,13 @@ package org.example.service;
 
 import org.example.model.dto.CarDto;
 import org.example.model.entity.Car;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
 public interface CarService {
 
-    CarDto createCar(CarDto carDto, String username);
+    CarDto createCar(CarDto carDto, UserDetails userDetails);
 
     List<CarDto> getAllCar();
 

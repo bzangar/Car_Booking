@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.model.dto.BookingDto;
 import org.example.model.dto.BookingResponseDto;
 import org.example.service.BookingService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,10 +19,10 @@ public class BookingController {
 
     @PostMapping("/booking")
     public BookingResponseDto createBooking(
-            @RequestBody BookingDto bookingDto
-    ){
+            @RequestBody BookingDto bookingDto, @AuthenticationPrincipal UserDetails userDetails
+            ){
 
-        return bookingService.createBooking(bookingDto);
+        return bookingService.createBooking(bookingDto, userDetails);
     }
 
     @GetMapping("/booking/{id}")
@@ -39,11 +41,11 @@ public class BookingController {
         return bookingService.changeTheStatus(id, bookingDto);
     }
 
-    @GetMapping("/users/{id}/bookings")
+    @GetMapping("/users/me/bookings")
     public List<BookingResponseDto> getAllBookingsByUserId(
-            @PathVariable Integer id
+            @AuthenticationPrincipal UserDetails userDetails
     ){
 
-        return bookingService.getAllBookingsByUserId(id);
+        return bookingService.getAllBookingsByUserDetails(userDetails);
     }
 }
