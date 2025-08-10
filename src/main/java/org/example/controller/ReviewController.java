@@ -3,6 +3,8 @@ package org.example.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.model.dto.ReviewDto;
 import org.example.service.ReviewService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,10 +17,10 @@ public class ReviewController {
 
     @PostMapping("/cars/{carId}/reviews")
     public ReviewDto createReview(
-            @PathVariable Integer carId, @RequestBody ReviewDto reviewDto
-    ){
+            @PathVariable Integer carId, @RequestBody ReviewDto reviewDto, @AuthenticationPrincipal UserDetails userDetails
+            ){
 
-        return reviewService.createReview(carId, reviewDto);
+        return reviewService.createReview(carId, reviewDto, userDetails);
     }
 
     @GetMapping("/cars/{carId}/reviews")

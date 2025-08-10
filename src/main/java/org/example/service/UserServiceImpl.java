@@ -27,57 +27,11 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public UserDto getUserDtoById(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User does not exists!!!"));
-
-        return mapper.userFromEntityToDto(user);
-    }
-
-    @Override
-    public boolean deleteUserById(Integer id) {
-
-        if(!userRepository.existsById(id)){
-            throw new UserNotFoundException("User does not exists!!");
-        }
-
-        if(id == null){
-            throw new RuntimeException("Id must not be null!!!");
-        }
-
-        userRepository.deleteById(id);
-
-        return true;
-    }
-
-    @Override
-    public UserDto updateUserById(Integer id, UserDto userDto) {
-        User user = userRepository.findById(id).
-                orElseThrow(() -> new UserNotFoundException("User does not exists"));
-        user.setUsername(userDto.getUsername());
-        user.setPassword(userDto.getPassword());
-        user.setFullName(userDto.getFullName());
-        //user.setRole(userDto.getRole());
-        userRepository.save(user);
-
-        return mapper.userFromEntityToDto(user);
-    }
-
-    @Override
     public User getUserById(Integer id) {
 
         return userRepository.findById(id)
                 .orElseThrow(()-> new UserNotFoundException("User does not exists!!"));
     }
-
-    @Override
-    public List<UserDto> getAllUser() {
-
-        return userRepository.findAll()
-                .stream()
-                .map(user -> mapper.userResponceFromEntityToDto(user))
-                .toList();
-    }
-
 
     @Override
     public User getUserByUsername(String username) {
@@ -95,11 +49,6 @@ public class UserServiceImpl implements UserService{
                 List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
         );
     }
-
-
-
-
-
 
     @Override
     public RegisterUserDto getCurrentUser(UserDetails userDetails) {

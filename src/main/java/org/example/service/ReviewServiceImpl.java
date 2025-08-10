@@ -5,7 +5,9 @@ import org.example.exception.ReviewNotFoundException;
 import org.example.model.Mapper;
 import org.example.model.dto.ReviewDto;
 import org.example.model.entity.Review;
+import org.example.model.entity.User;
 import org.example.repository.ReviewRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,12 +23,15 @@ public class ReviewServiceImpl implements ReviewService{
     final private Mapper mapper;
 
     @Override
-    public ReviewDto createReview(Integer carId, ReviewDto reviewDto) {
+    public ReviewDto createReview(Integer carId, ReviewDto reviewDto, UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        User user = userService.getUserByUsername(username);
+
         Review review = Review.builder()
                 .comment(reviewDto.getComment())
                 .rating(reviewDto.getRating())
                 .car(carService.getCarById(carId))
-                .user(userService.getUserById(reviewDto.getUser().getId()))
+                .user(user)
                 .build();
         reviewRepository.save(review);
 

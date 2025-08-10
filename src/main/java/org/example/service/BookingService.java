@@ -15,8 +15,6 @@ public interface BookingService {
 
     BookingResponseDto changeTheStatus(Integer id, BookingDto bookingDto);
 
-    List<BookingResponseDto> getAllBookingsByUserId(Integer userId);
-
     BigDecimal calculatePrice(BookingDto bookingDto);
 
     List<BookingResponseDto> getAllBookingsByUserDetails(UserDetails userDetails);

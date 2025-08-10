@@ -64,16 +64,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponseDto> getAllBookingsByUserId(Integer userId) {
-
-        return bookingRepository.findAllByUserId(userId)
-                .stream()
-                .sorted((booking1, booking2) -> booking2.getId()- booking1.getId())
-                .map(booking-> mapper.bookingFromEntityToResponseDto(booking))
-                .toList();
-    }
-
-    @Override
     public BigDecimal calculatePrice(BookingDto bookingDto) {
         LocalDate startTime = bookingDto.getStartTime();
         LocalDate endTime = bookingDto.getEndTime();

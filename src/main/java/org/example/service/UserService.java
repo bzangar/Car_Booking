@@ -12,19 +12,9 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
-    UserDto getUserDtoById(Integer id);
-
-    List<UserDto> getAllUser();
-
-    boolean deleteUserById(Integer id);
-
-    UserDto updateUserById(Integer id, UserDto userDto);
-
     User getUserById(Integer id);
 
     User getUserByUsername(String username);
-
-
 
     RegisterUserDto getCurrentUser(UserDetails userDetails);
     RegisterUserDto updateCurrentUser(UserDetails userDetails, RegisterUserDto registerUserDto);
