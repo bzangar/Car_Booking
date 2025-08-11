@@ -31,12 +31,25 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(auth->
                         auth.requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/cars").permitAll()
+                                .requestMatchers("/login.html",
+                                        "/register.html",
+                                        "/css/**",
+                                        "/js/**",
+                                        "/owner/**",
+                                        "/client/**",
+                                        "/admin/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/cars").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.PUT, "/api/cars/**").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/cars/**").hasRole("OWNER")
+                                .requestMatchers(HttpMethod.GET, "/api/cars/owner").hasRole("OWNER")
+                                .requestMatchers(HttpMethod.GET, "/api/owner/booking").hasRole("OWNER")
 
-                                .requestMatchers(HttpMethod.PUT, "/api/bookings/**").hasRole("OWNER")
+
+                                .requestMatchers(HttpMethod.PUT, "/api/booking/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/booking").authenticated()
+
+                                .requestMatchers(HttpMethod.GET, "/api/cars/*/reviews").permitAll()
 
                                 .anyRequest().authenticated())
 

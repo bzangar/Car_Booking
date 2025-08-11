@@ -38,6 +38,13 @@ public class CarController {
         return carService.getAllCar();
     }
 
+    @GetMapping("/owner")
+    public List<CarDto> getAllCarsOfOwner(@AuthenticationPrincipal UserDetails userDetails)
+    {
+
+        return carService.getAllCarOfOwner(userDetails);
+    }
+
     @GetMapping("/{id}")
     public CarDto getCarById(
             @PathVariable Integer id)

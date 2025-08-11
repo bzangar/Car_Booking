@@ -132,15 +132,15 @@
 <div id="car-list"></div>
 
 <div class="bottom-nav">
-  <button class="active" onclick="window.location.href='/cars.html'">
+  <button class="active" onclick="window.location.href='/client/cars.html'">
     <span>🚗</span>
     Cars
   </button>
-  <button onclick="window.location.href='/bookings.html'">
+  <button onclick="window.location.href='/client/bookings.html'">
     <span>📅</span>
     Bookings
   </button>
-  <button onclick="window.location.href='/profile.html'">
+  <button onclick="window.location.href='/client/profile.html'">
     <span>👤</span>
     Profile
   </button>
@@ -173,7 +173,7 @@
             <input type="date" id="${endId}" required><br>
 
             <button class="book-btn" data-car-id="${car.id}" type="button">Book</button>
-            <button class="reviews-btn" type="button" onclick="window.location.href='/reviews.html?carId=${car.id}'">Reviews</button>
+            <button class="reviews-btn" type="button" onclick="window.location.href='/client/reviews.html?carId=${car.id}'">Reviews</button>
           </form>
         `;
 
@@ -193,7 +193,10 @@
 
           fetch('http://localhost:8080/api/booking', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+      'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + localStorage.getItem('token')
+    },
             body: JSON.stringify({
               startTime,
               endTime,

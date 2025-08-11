@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Bookings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+          margin: 0;
+          font-family: 'Inter', sans-serif;
+          background-color: #f3f4f6;
+          color: #333;
+          padding-bottom: 80px;
+        }
+
+        h1 {
+          text-align: center;
+          margin: 20px 0;
+          font-size: 28px;
+        }
+
+        #booking-list {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 10px;
+        }
+
+        .booking {
+          background: white;
+          border-radius: 10px;
+          padding: 20px;
+          margin: 15px 0;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+          transition: transform 0.2s ease;
+        }
+
+        .booking:hover {
+          transform: translateY(-2px);
+        }
+
+        .booking p {
+          margin: 6px 0;
+          line-height: 1.4;
+        }
+
+        .bottom-nav {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 60px;
+          background-color: #ffffff;
+          border-top: 1px solid #ddd;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          z-index: 1000;
+          box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .bottom-nav button {
+          background: none;
+          border: none;
+          font-size: 14px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          color: #555;
+          cursor: pointer;
+          transition: color 0.2s;
+        }
+
+        .bottom-nav button:hover {
+          color: #000;
+        }
+
+        .bottom-nav button.active {
+          color: #007bff;
+          font-weight: 600;
+        }
+
+        .bottom-nav button span {
+          font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Bookings</h1>
+<div id="booking-list"></div>
+
+<div class="bottom-nav">
+    <button onclick="window.location.href='/client/cars.html'">
+        <span>🚗</span>
+        Cars
+    </button>
+    <button class="active" onclick="window.location.href='/client/bookings.html'">
+        <span>📅</span>
+        Bookings
+    </button>
+    <button onclick="window.location.href='/client/profile.html'">
+        <span>👤</span>
+        Profile
+    </button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            // если токена нет — отправляем на логин
+            window.location.href = "/login.html";
+            return;
+        }
+
+        fetch('http://localhost:8080/api/users/me/bookings', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Ошибка при получении бронирований, статус: " + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const bookingListDiv = document.getElementById('booking-list');
+
+            if (data.length === 0) {
+                bookingListDiv.innerHTML = "<p>Бронирований нет.</p>";
+                return;
+            }
+
+            data.forEach(booking => {
+                const bookingDiv = document.createElement('div');
+                bookingDiv.classList.add('booking');
+
+                bookingDiv.innerHTML = `
+                    <p><strong>Booking ID:</strong> ${booking.id}</p>
+                    <p><strong>User:</strong> ${booking.user.fullName}</p>
+                    <p><strong>Car:</strong> ${booking.car.brand} ${booking.car.model}</p>
+                    <p><strong>Start:</strong> ${booking.startTime}</p>
+                    <p><strong>End:</strong> ${booking.endTime}</p>
+                    <p><strong>Total Price:</strong> $${booking.totalPrice}</p>
+                    <p><strong>Status:</strong> ${booking.status}</p>
+                `;
+                bookingListDiv.appendChild(bookingDiv);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching bookings:', error);
+            document.getElementById('booking-list').innerHTML = "<p>Ошибка загрузки данных.</p>";
+        });
+    });
+</script>
+
+</body>
+
+</html>

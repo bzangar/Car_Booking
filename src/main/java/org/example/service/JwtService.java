@@ -4,12 +4,17 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.example.exception.UserNotFoundException;
+import org.example.model.entity.User;
+import org.example.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +26,17 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long expirationMs;
 
-    public String generateToken(UserDetails userDetails){
+    final private UserRepository userRepository;
 
+    public String generateToken(UserDetails userDetails){
+        String username = userDetails.getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(()-> new UserNotFoundException("User not found"));
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getRole().name());
         return Jwts.builder()
+                .claims(claims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMs))

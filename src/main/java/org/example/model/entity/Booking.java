@@ -2,6 +2,7 @@ package org.example.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.model.enums.BookingStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,5 +28,7 @@ public class Booking {
     private BigDecimal totalPrice;
     private LocalDate startTime;
     private LocalDate endTime;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
 }

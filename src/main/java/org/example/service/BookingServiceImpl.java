@@ -8,6 +8,7 @@ import org.example.model.dto.BookingResponseDto;
 import org.example.model.entity.Booking;
 import org.example.model.entity.Car;
 import org.example.model.entity.User;
+import org.example.model.enums.BookingStatus;
 import org.example.repository.BookingRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class BookingServiceImpl implements BookingService {
                 .totalPrice(calculatePrice(bookingDto))
                 .endTime(bookingDto.getEndTime())
                 .startTime(bookingDto.getStartTime())
-                .status("В ожидании")
+                .status(BookingStatus.PENDING)
                 .build();
         bookingRepository.save(booking);
 
@@ -85,6 +86,16 @@ public class BookingServiceImpl implements BookingService {
         String username = userDetails.getUsername();
 
         return bookingRepository.findByUserUsername(username)
+                .stream()
+                .map(booking -> mapper.bookingFromEntityToResponseDto(booking))
+                .toList();
+    }
+
+    @Override
+    public List<BookingResponseDto> getAllBookingsOfOwner(UserDetails userDetails) {
+        String username = userDetails.getUsername();
+
+        return bookingRepository.findByCar_User_Username(username)
                 .stream()
                 .map(booking -> mapper.bookingFromEntityToResponseDto(booking))
                 .toList();

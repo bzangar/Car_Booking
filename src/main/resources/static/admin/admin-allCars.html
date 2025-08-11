@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>All Car List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+      color: #333;
+      padding-bottom: 80px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 28px;
+    }
+
+    #car-list {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .car {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 15px 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .car h3 {
+      margin-top: 0;
+    }
+
+    .car p {
+      margin: 6px 0;
+      line-height: 1.4;
+    }
+
+    .car label {
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    .car input[type="date"] {
+      padding: 8px;
+      font-size: 14px;
+      margin: 5px 0 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .car button {
+      padding: 10px 15px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: background-color 0.2s;
+    }
+
+    .book-btn {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .book-btn:hover {
+      background-color: #0069d9;
+    }
+
+    .reviews-btn {
+      background-color: #f0f0f0;
+    }
+
+    .reviews-btn:hover {
+      background-color: #e0e0e0;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: #ffffff;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .bottom-nav button {
+      background: none;
+      border: none;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #555;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .bottom-nav button:hover {
+      color: #000;
+    }
+
+    .bottom-nav button.active {
+      color: #007bff;
+      font-weight: 600;
+    }
+
+    .bottom-nav button span {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Available Cars</h1>
+<div id="car-list"></div>
+
+<div class="bottom-nav">
+  <button class="active" onclick="window.location.href='/admin/admin-AllCars.html'">
+    <span>🚗</span>
+    All Cars
+  </button>
+  <button onclick="window.location.href='/admin/admin-bookings.html'">
+    <span>📅</span>
+    Bookings
+  </button>
+  <button onclick="window.location.href='/admin/admin-allUsers.html'">
+    <span>👤👤</span>
+    All Users
+  </button>
+  <button onclick="window.location.href='/admin/admin-profile.html'">
+    <span>👤</span>
+    Profile
+  </button>
+</div>
+
+<script>
+
+  const token = localStorage.getItem("token");
+
+   fetch('http://localhost:8080/api/cars')
+     .then(response => response.json())
+     .then(data => {
+       const carListDiv = document.getElementById('car-list');
+
+       data.forEach(car => {
+         const carDiv = document.createElement('div');
+         carDiv.classList.add('car');
+
+         const startId = `start-${car.id}`;
+         const endId = `end-${car.id}`;
+
+         carDiv.innerHTML = `
+           <form>
+             <h3>${car.brand} ${car.model}</h3>
+             <p><strong>Price:</strong> $${car.pricePerDay}</p>
+             <p><strong>Location:</strong> ${car.location}</p>
+             <p><strong>Status:</strong> ${car.status}</p>
+
+             <label for="${startId}">Start date:</label>
+             <input type="date" id="${startId}" required>
+
+             <label for="${endId}">End date:</label>
+             <input type="date" id="${endId}" required><br><br>
+
+             <button class="book-btn" data-car-id="${car.id}" type="button">Book</button>
+             <button class="reviews-btn" type="button" onclick="window.location.href='/admin/admin-reviews.html?carId=${car.id}'">Reviews</button>
+             <button class="delete-btn" data-car-id="${car.id}" type="button" style="background-color: #dc3545; color: white;">Delete</button>
+           </form>
+         `;
+
+         carListDiv.appendChild(carDiv);
+       });
+
+       // Book button logic
+       document.querySelectorAll('.book-btn').forEach(button => {
+         button.addEventListener('click', function () {
+           const carId = this.getAttribute('data-car-id');
+           const startTime = document.getElementById(`start-${carId}`).value;
+           const endTime = document.getElementById(`end-${carId}`).value;
+
+           if (!startTime || !endTime) {
+             alert("Please fill both start and end dates.");
+             return;
+           }
+
+           fetch('http://localhost:8080/api/booking', {
+             method: 'POST',
+             headers: { 'Authorization': 'Bearer ' + token,
+                 'Content-Type': 'application/json' },
+             body: JSON.stringify({
+               startTime,
+               endTime,
+               status: "В ожидании",
+               car: { id: parseInt(carId) },
+               user: { id: 1 }
+             })
+           })
+             .then(res => {
+               if (!res.ok) throw new Error("Booking failed");
+               return res.json();
+             })
+             .then(() => alert("Booking successful!"))
+             .catch(err => {
+               console.error("Booking error:", err);
+               alert("Booking failed.");
+             });
+         });
+       });
+
+       // Delete button logic
+       document.querySelectorAll('.delete-btn').forEach(button => {
+         button.addEventListener('click', function () {
+           const carId = this.getAttribute('data-car-id');
+           if (confirm(`Are you sure you want to delete car #${carId}?`)) {
+             fetch(`http://localhost:8080/api/cars/${carId}`, {
+               method: 'DELETE',
+               headers: { 'Authorization': 'Bearer ' + token,
+                 'Content-Type': 'application/json' }
+             })
+               .then(response => {
+                 if (!response.ok) throw new Error("Delete failed");
+                 alert("Car deleted successfully.");
+                 location.reload();
+               })
+               .catch(error => {
+                 console.error("Delete error:", error);
+                 alert("Failed to delete car.");
+               });
+           }
+         });
+       });
+
+     })
+     .catch(error => console.error('Error fetching cars:', error));
+</script>
+
+
+</body>
+</html>

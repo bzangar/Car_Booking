@@ -159,91 +159,102 @@
 </form>
 
 <div class="bottom-nav">
-  <button class="active" onclick="window.location.href='/admin-AllCars.html'">
+  <button class="active" onclick="window.location.href='/admin/admin-AllCars.html'">
     <span>🚗</span>
     All Cars
   </button>
-  <button onclick="window.location.href='/admin-bookings.html'">
+  <button onclick="window.location.href='/admin/admin-bookings.html'">
     <span>📅</span>
     Bookings
   </button>
-  <button onclick="window.location.href='/admin-allUsers.html'">
+  <button onclick="window.location.href='/admin/admin-allUsers.html'">
     <span>👤👤</span>
     All Users
   </button>
-  <button onclick="window.location.href='/admin-profile.html'">
+  <button onclick="window.location.href='/admin/admin-profile.html'">
     <span>👤</span>
     Profile
   </button>
 </div>
 
 <script>
-  fetch("http://localhost:8080/api/users/get/1")
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById('fullName').value = data.fullName;
-      document.getElementById('login').value = data.email;
-      document.getElementById('password').value = data.password;
-    })
-    .catch(error => console.log("Error in profile: " + error));
+  document.addEventListener("DOMContentLoaded", () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+          window.location.href = "/login.html";
+          return;
+      }
 
-  document.getElementById('change').addEventListener('click', function(event) {
-    event.preventDefault();
-    document.getElementById('fullName').disabled = false;
-    document.getElementById('login').disabled = false;
-    document.getElementById('password').disabled = false;
-  });
-
-  document.getElementById('profileForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const name = document.getElementById('fullName').value;
-    const login = document.getElementById('login').value;
-    const password = document.getElementById('password').value;
-
-    if (!name || !login || !password) {
-      alert("Fill out all fields!");
-      return;
-    }
-
-    fetch("http://localhost:8080/api/users/update/1", {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fullName: name, email: login, password: password })
-    })
-    .then(response => {
-      if (!response.ok) throw new Error("Failed to update profile.");
-      return response.json();
-    })
-    .then(data => {
-      alert("Profile updated successfully!");
-      document.getElementById('fullName').disabled = true;
-      document.getElementById('login').disabled = true;
-      document.getElementById('password').disabled = true;
-    })
-    .catch(error => {
-      console.error("Error:", error);
-      alert("Failed to update profile.");
-    });
-  });
-
-  function logout() {
-    if (confirm("Вы действительно хотите выйти?")) {
-      fetch("http://localhost:8080/auth/logout", {
-        method: "POST",
-        credentials: "include" // если используешь сессии или куки
+      // Получение текущего пользователя
+      fetch("http://localhost:8080/api/users/me", {
+          method: "GET",
+          headers: {
+              "Authorization": "Bearer " + token,
+              "Content-Type": "application/json"
+          }
       })
       .then(res => {
-        if (res.ok) {
-          window.location.href = "/login.html";
-        } else {
-          alert("Ошибка при выходе.");
-        }
+          if (!res.ok) throw new Error("Ошибка при загрузке профиля");
+          return res.json();
       })
-      .catch(err => {
-        console.error("Logout error:", err);
-        alert("Ошибка при выходе.");
+      .then(data => {
+          document.getElementById('fullName').value = data.fullName;
+          document.getElementById('login').value = data.username; // или email, если есть
+          document.getElementById('password').value = data.password || "";
+      })
+      .catch(error => console.error("Error in profile:", error));
+
+      // Разрешить редактирование
+      document.getElementById('change').addEventListener('click', function(event) {
+          event.preventDefault();
+          document.getElementById('fullName').disabled = false;
+          document.getElementById('login').disabled = false;
+          document.getElementById('password').disabled = false;
       });
-    }
+
+      // Сохранить изменения
+      document.getElementById('profileForm').addEventListener('submit', function(event) {
+          event.preventDefault();
+          const name = document.getElementById('fullName').value;
+          const login = document.getElementById('login').value;
+          const password = document.getElementById('password').value;
+
+          if (!name || !login || !password) {
+              alert("Fill out all fields!");
+              return;
+          }
+
+          fetch("http://localhost:8080/api/users/me", {
+              method: 'PUT',
+              headers: {
+                  'Authorization': 'Bearer ' + token,
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ fullName: name, username: login, password: password })
+          })
+          .then(response => {
+              if (!response.ok) throw new Error("Failed to update profile.");
+              return response.json();
+          })
+          .then(() => {
+              alert("Profile updated successfully!");
+              document.getElementById('fullName').disabled = true;
+              document.getElementById('login').disabled = true;
+              document.getElementById('password').disabled = true;
+          })
+          .catch(error => {
+              console.error("Error:", error);
+              alert("Failed to update profile.");
+          });
+      });
+  });
+
+  // Logout
+  function logout() {
+      if (confirm("Вы действительно хотите выйти?")) {
+          localStorage.removeItem("token");
+          window.location.href = "/login.html";
+      }
   }
 </script>
 </body>

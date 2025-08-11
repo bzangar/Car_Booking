@@ -1,6 +1,7 @@
 package org.example.model.dto;
 
 import lombok.*;
+import org.example.model.enums.BookingStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,5 +17,5 @@ public class BookingResponseDto {
     private BigDecimal totalPrice;
     private LocalDate startTime;
     private LocalDate endTime;
-    private String status;
+    private BookingStatus status;
 }

@@ -133,9 +133,9 @@
 <div id="review-list"></div>
 
 <div class="bottom-nav">
-    <button onclick="window.location.href='/cars.html'"><span>🚗</span>Cars</button>
-    <button onclick="window.location.href='/bookings.html'"><span>📅</span>Bookings</button>
-    <button onclick="window.location.href='/profile.html'"><span>👤</span>Profile</button>
+    <button onclick="window.location.href='/client/cars.html'"><span>🚗</span>Cars</button>
+    <button onclick="window.location.href='/client/bookings.html'"><span>📅</span>Bookings</button>
+    <button onclick="window.location.href='/client/profile.html'"><span>👤</span>Profile</button>
 </div>
 
 <script>
@@ -167,6 +167,8 @@
     document.getElementById('reviewForm').addEventListener('submit', function (event) {
       event.preventDefault();
 
+      const token = localStorage.getItem('token'); // или другой спосо
+
       const rating = document.getElementById('rating').value;
       const comment = document.getElementById('comment').value;
 
@@ -177,9 +179,10 @@
 
       fetch(`http://localhost:8080/api/cars/${carId}/reviews`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+         },
         body: JSON.stringify({
-          user: { id: 1 },
           car: { id: parseInt(carId) },
           rating: parseInt(rating),
           comment: comment

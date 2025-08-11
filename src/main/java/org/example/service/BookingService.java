@@ -18,4 +18,7 @@ public interface BookingService {
     BigDecimal calculatePrice(BookingDto bookingDto);
 
     List<BookingResponseDto> getAllBookingsByUserDetails(UserDetails userDetails);
+
+    List<BookingResponseDto> getAllBookingsOfOwner(UserDetails userDetails);
+
 }

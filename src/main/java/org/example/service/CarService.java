@@ -12,6 +12,8 @@ public interface CarService {
 
     List<CarDto> getAllCar();
 
+    List<CarDto> getAllCarOfOwner(UserDetails userDetails);
+
     CarDto getCarDtoById(Integer id);
 
     CarDto editCar(Integer id, CarDto carDto);

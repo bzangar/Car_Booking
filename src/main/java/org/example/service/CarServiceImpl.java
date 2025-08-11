@@ -100,4 +100,14 @@ public class CarServiceImpl implements CarService{
         return carRepository.findById(id)
                 .orElseThrow(()-> new CarNotFoundException("Car does not exists!!!"));
     }
+
+    @Override
+    public List<CarDto> getAllCarOfOwner(UserDetails userDetails) {
+        String username = userDetails.getUsername();
+
+        return carRepository.findByUser_Username(username)
+                .stream()
+                .map(car -> mapper.carFromEntityToDto(car))
+                .toList();
+    }
 }

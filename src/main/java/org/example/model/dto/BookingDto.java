@@ -1,6 +1,8 @@
 package org.example.model.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.example.model.enums.BookingStatus;
 
 import java.time.LocalDate;
 
@@ -14,5 +16,7 @@ public class BookingDto {
     private CarDto car;
     private LocalDate startTime;
     private LocalDate endTime;
-    private String status;
+
+    @NotNull(message = "Status cannot be null")
+    private BookingStatus status;
 }

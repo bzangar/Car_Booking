@@ -111,27 +111,66 @@
 <script>
   const form = document.getElementById("loginForm");
 
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const formData = new FormData(form);
+    const username = form.username.value;
+    const password = form.password.value;
 
-    fetch("/auth/login", {
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
-        body: formData // НЕ JSON!
-    })
-    .then(response => {
-        if (response.redirected) {
-            window.location.href = response.url;
-        } else {
-            document.getElementById("error").innerText = "Неверный логин или пароль";
-        }
-    })
-    .catch(() => {
-        document.getElementById("error").innerText = "Ошибка подключения к серверу.";
-    });
-});
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      if (!response.ok) {
+        document.getElementById("error").innerText = "Неверный логин или пароль";
+        return;
+      }
+
+      const data = await response.json();
+      const token = data.token || data.jwt || null; // зависит от твоего AuthResponseDto
+
+      if (!token) {
+        document.getElementById("error").innerText = "Сервер не вернул токен";
+        return;
+      }
+
+      // Сохраняем токен
+      localStorage.setItem("token", token);
+
+
+      // Декодируем токен, чтобы узнать роль
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const role = payload.role || null;
+
+
+      if (!role) {
+        document.getElementById("error").innerText = "Не удалось определить роль";
+        return;
+      }
+      localStorage.setItem("role", role);
+
+
+      // Перенаправляем в зависимости от роли
+      if (role === "ADMIN") {
+        window.location.href = "/admin/admin-allCars.html";
+      } else if (role === "OWNER") {
+        window.location.href = "/owner/owner-cars.html";
+      } else {
+        window.location.href = "/client/cars.html";
+      }
+
+    } catch (error) {
+      console.error(error);
+      document.getElementById("error").innerText = "Ошибка подключения к серверу.";
+    }
+  });
 </script>
+
 
 </body>
 </html>
