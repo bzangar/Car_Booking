@@ -20,7 +20,7 @@ public class UserController {
     final private UserService userService;
 
     @GetMapping()
-    public RegisterUserDto getCerrentUser(@AuthenticationPrincipal UserDetails userDetails){
+    public RegisterUserDto getCurrentUser(@AuthenticationPrincipal UserDetails userDetails){
 
         return userService.getCurrentUser(userDetails);
     }

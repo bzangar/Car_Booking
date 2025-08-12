@@ -21,7 +21,6 @@ public class CarController {
 
     final private CarService carService;
 
-    /// //////
     @PostMapping()
     public CarDto createCar(
             @RequestBody CarDto carDto , @AuthenticationPrincipal UserDetails userDetails
@@ -53,7 +52,6 @@ public class CarController {
         return carService.getCarDtoById(id);
     }
 
-    /// //////
     @PutMapping("/{id}")
     public CarDto editCarById(
             @PathVariable Integer id, @RequestBody CarDto carDto)
@@ -62,7 +60,6 @@ public class CarController {
         return carService.editCar(id, carDto);
     }
 
-    /// //////
     @DeleteMapping("/{id}")
     public boolean deleteCarById(
             @PathVariable Integer id)
