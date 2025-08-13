@@ -77,7 +77,7 @@ class BookingServiceImplTest {
                 .car(org.example.model.dto.CarDto.builder().id(1).build())
                 .startTime(LocalDate.of(2025, 1, 1))
                 .endTime(LocalDate.of(2025, 1, 3))
-                .status(BookingStatus.APPROVED)
+                .status(BookingStatus.PENDING)
                 .build();
 
         bookingResponseDto = BookingResponseDto.builder()
@@ -129,7 +129,7 @@ class BookingServiceImplTest {
 
         assertNotNull(result);
         verify(bookingRepository, times(1)).save(booking);
-        assertEquals(BookingStatus.APPROVED, booking.getStatus());
+        assertEquals(BookingStatus.PENDING, booking.getStatus());
     }
 
     @Test

@@ -38,7 +38,10 @@ public class SecurityConfiguration {
                                         "/js/**",
                                         "/owner/**",
                                         "/client/**",
-                                        "/admin/**").permitAll()
+                                        "/admin/**",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui.html").permitAll()
 
                                 .requestMatchers(HttpMethod.POST, "/api/cars").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.PUT, "/api/cars/**").hasRole("OWNER")
