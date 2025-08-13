@@ -3,10 +3,9 @@ package org.example.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.model.dto.CarDto;
 import org.example.model.dto.UserDto;
+import org.example.model.dto.UserResponceDto;
 import org.example.service.AdminService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +20,12 @@ public class AdminController {
     public List<UserDto> getAllUsers(){
 
         return adminService.getAllUsers();
+    }
+
+    @DeleteMapping("/users/{id}")
+    public UserResponceDto deleteUserById(@PathVariable Integer id){
+
+        return adminService.deleteUserById(id);
     }
 
     @GetMapping("/cars")

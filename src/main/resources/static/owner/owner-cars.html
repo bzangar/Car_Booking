@@ -205,6 +205,8 @@
 
 <div id="car-list"></div>
 
+
+
 <div class="bottom-nav">
   <button class="active" onclick="window.location.href='/owner/owner-cars.html'">
     <span>🚗</span>
@@ -257,12 +259,40 @@ checkRole('OWNER');
       <h3>${car.brand} ${car.model}</h3>
       <p><strong>Price:</strong> $${car.pricePerDay}</p>
       <p><strong>Location:</strong> ${car.location}</p>
-      <p><strong>Status:</strong> ${car.status}</p>
+      <button class="delete-car-btn" data-id="${car.id}"
+                        style="background: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px;">
+                    Удалить
+                </button>
     `;
 
     carListDiv.appendChild(carDiv);
   });
+  // Вешаем обработчики на кнопки удаления
+        document.querySelectorAll(".delete-car-btn").forEach(btn => {
+            btn.addEventListener("click", async (e) => {
+                const carId = e.target.getAttribute("data-id");
+                if (confirm("Вы уверены, что хотите удалить эту машину?")) {
+                    try {
+                        const res = await fetch(`http://localhost:8080/api/cars/${carId}`, {
+                            method: "DELETE",
+                            headers: {
+                                "Authorization": "Bearer " + localStorage.getItem("token")
+                            }
+                        });
+                        if (!res.ok) throw new Error("Ошибка удаления машины");
+
+                        alert("Машина удалена");
+                        e.target.closest(".car-item").remove(); // удаляем блок из DOM
+                    } catch (err) {
+                        console.error("Ошибка:", err);
+                        //alert("Не удалось удалить машину");
+                    }
+                }
+            });
+        });
+
 })
+
 .catch(error => console.error('Error fetching cars:', error));
 
 
@@ -277,7 +307,7 @@ checkRole('OWNER');
             return;
           }
 
-          fetch('http://localhost:8080/api/booking', {
+          fetch('http://localhost:8080/api/bookings', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
@@ -286,9 +316,7 @@ checkRole('OWNER');
             body: JSON.stringify({
               startTime,
               endTime,
-              status: "В ожидании",
               car: { id: parseInt(carId) },
-              user: { id: 1 }
             })
           })
             .then(res => {
@@ -303,8 +331,7 @@ checkRole('OWNER');
         });
       });
 
-    })
-    .catch(error => console.error('Error fetching cars:', error));
+
 
 
 
@@ -336,7 +363,7 @@ checkRole('OWNER');
     })
     .catch(err => {
       console.error("Error adding car:", err);
-      alert("Failed to add car.");
+      //alert("Failed to add car.");
     });
 });
 

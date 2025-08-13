@@ -123,7 +123,13 @@
 
 <script>
   // Fetch and render users
-  fetch('http://localhost:8080/api/users')
+  fetch('http://localhost:8080/api/admin/users', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            }
+        })
     .then(response => response.json())
     .then(users => {
       const userList = document.getElementById('user-list');
@@ -148,9 +154,13 @@
         button.addEventListener('click', function () {
           const userId = this.getAttribute('data-user-id');
           if (confirm(`Delete user ID ${userId}?`)) {
-            fetch(`http://localhost:8080/api/users/${userId}`, {
-              method: 'DELETE'
-            })
+            fetch(`http://localhost:8080/api/admin/users/${userId}`, {
+             method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            }
+        })
               .then(res => {
                 if (!res.ok) throw new Error('Failed to delete user');
                 alert('User deleted successfully');

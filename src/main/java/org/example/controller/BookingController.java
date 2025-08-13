@@ -19,7 +19,7 @@ public class BookingController {
 
     final private BookingService bookingService;
 
-    @PostMapping("/booking")
+    @PostMapping("/bookings")
     public BookingResponseDto createBooking(
             @RequestBody BookingDto bookingDto, @AuthenticationPrincipal UserDetails userDetails
             ){
@@ -27,7 +27,7 @@ public class BookingController {
         return bookingService.createBooking(bookingDto, userDetails);
     }
 
-    @GetMapping("/booking/{id}")
+    @GetMapping("/bookings/{id}")
     public BookingResponseDto getBookingById(
             @PathVariable Integer id
     ){
@@ -35,7 +35,15 @@ public class BookingController {
         return bookingService.getBookingById(id);
     }
 
-    @PutMapping("/booking/{id}/status")
+    @DeleteMapping("/bookings/{id}")
+    public BookingResponseDto deleteBookingById(
+            @PathVariable Integer id
+    ){
+
+        return bookingService.deleteBookingById(id);
+    }
+
+    @PutMapping("/bookings/{id}/status")
     public BookingResponseDto changeStatus(
             @PathVariable Integer id, @Valid @RequestBody BookingDto bookingDto
     ){
@@ -43,7 +51,7 @@ public class BookingController {
         return bookingService.changeTheStatus(id, bookingDto);
     }
 
-    @GetMapping("/users/me/booking")
+    @GetMapping("/users/me/bookings")
     public List<BookingResponseDto> getAllBookingsByUserId(
             @AuthenticationPrincipal UserDetails userDetails
     ){
@@ -51,7 +59,7 @@ public class BookingController {
         return bookingService.getAllBookingsByUserDetails(userDetails);
     }
 
-    @GetMapping("/owner/booking")
+    @GetMapping("/owner/bookings")
     public List<BookingResponseDto> getAllBookingsOfOwner(
             @AuthenticationPrincipal UserDetails userDetails
     ){

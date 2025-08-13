@@ -147,9 +147,37 @@
                     <p><strong>End:</strong> ${booking.endTime}</p>
                     <p><strong>Total Price:</strong> $${booking.totalPrice}</p>
                     <p><strong>Status:</strong> ${booking.status}</p>
+                    <button class="delete-booking-btn" data-id="${booking.id}"
+                        style="background: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px;">
+                    Удалить
+                </button>
                 `;
                 bookingListDiv.appendChild(bookingDiv);
             });
+
+            // Вешаем обработчики на кнопки удаления
+        document.querySelectorAll(".delete-booking-btn").forEach(btn => {
+            btn.addEventListener("click", async (e) => {
+                const carId = e.target.getAttribute("data-id");
+                if (confirm("Вы уверены, что хотите удалить бронирование?")) {
+                    try {
+                        const res = await fetch(`http://localhost:8080/api/bookings/${carId}`, {
+                            method: "DELETE",
+                            headers: {
+                                "Authorization": "Bearer " + localStorage.getItem("token")
+                            }
+                        });
+                        if (!res.ok) throw new Error("Ошибка удаления бронировании");
+
+                        alert("Бронирование удалена");
+                        e.target.closest(".car-item").remove(); // удаляем блок из DOM
+                    } catch (err) {
+                        console.error("Ошибка:", err);
+                        //alert("Не удалось удалить бронирование");
+                    }
+                }
+            });
+        });
         })
         .catch(error => {
             console.error('Error fetching bookings:', error);

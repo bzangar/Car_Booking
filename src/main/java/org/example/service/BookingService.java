@@ -21,4 +21,6 @@ public interface BookingService {
 
     List<BookingResponseDto> getAllBookingsOfOwner(UserDetails userDetails);
 
+    BookingResponseDto deleteBookingById(Integer id);
+
 }

@@ -134,6 +134,18 @@
       background-color: #c82333;
     }
 
+    .delete-account-btn {
+  position: fixed;
+  bottom: 70px; /* was 10px, now above 60px bottom nav */
+  left: 10px;
+  background-color: red;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
   </style>
 </head>
 <body>
@@ -157,6 +169,8 @@
     <button id="save" type="submit">Save</button>
   </div>
 </form>
+
+<button class="delete-account-btn" id="deleteAccountBtn">Delete Account</button>
 
 <div class="bottom-nav">
   <button onclick="window.location.href='/owner/owner-cars.html'">
@@ -252,6 +266,32 @@
           window.location.href = "/login.html";
       }
   }
+</script>
+<script>
+  document.getElementById("deleteAccountBtn").addEventListener("click", function () {
+    if (!confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      return;
+    }
+
+    fetch('http://localhost:8080/api/users/me', {
+      method: 'DELETE',
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("Failed to delete account");
+      }
+      alert("Account deleted successfully.");
+      localStorage.removeItem('token');
+      window.location.href = "/login.html";
+    })
+    .catch(err => {
+      console.error("Delete account error:", err);
+      alert("Failed to delete account.");
+    });
+  });
 </script>
 </body>
 </html>

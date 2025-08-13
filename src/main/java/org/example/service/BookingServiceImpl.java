@@ -100,4 +100,18 @@ public class BookingServiceImpl implements BookingService {
                 .map(booking -> mapper.bookingFromEntityToResponseDto(booking))
                 .toList();
     }
+
+    @Override
+    public BookingResponseDto deleteBookingById(Integer id) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(()-> new BookingNotFoundException("Booking not found"));
+
+        bookingRepository.delete(booking);
+
+
+        return BookingResponseDto.builder()
+                .id(booking.getId())
+                .car(mapper.carFromEntityToDto(booking.getCar()))
+                .build();
+    }
 }

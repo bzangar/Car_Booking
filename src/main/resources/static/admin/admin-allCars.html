@@ -200,16 +200,14 @@
              return;
            }
 
-           fetch('http://localhost:8080/api/booking', {
+           fetch('http://localhost:8080/api/bookings', {
              method: 'POST',
              headers: { 'Authorization': 'Bearer ' + token,
                  'Content-Type': 'application/json' },
              body: JSON.stringify({
                startTime,
                endTime,
-               status: "В ожидании",
                car: { id: parseInt(carId) },
-               user: { id: 1 }
              })
            })
              .then(res => {

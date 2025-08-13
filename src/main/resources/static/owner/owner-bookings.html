@@ -147,9 +147,42 @@
                   <p><strong>End:</strong> ${booking.endTime}</p>
                   <p><strong>Total Price:</strong> $${booking.totalPrice}</p>
                   <p><strong>Status:</strong> ${booking.status}</p>
+                  <div class="status-buttons">
+                    <button data-id="${booking.id}" data-status="CONFIRMED" class="status-btn">Подтвердить</button>
+                    <button data-id="${booking.id}" data-status="CANCELLED" class="status-btn">Отменить</button>
+                    <button data-id="${booking.id}" data-status="COMPLETED" class="status-btn">Завершить</button>
+                </div>
               `;
               bookingListDiv.appendChild(bookingDiv);
           });
+          // Навешиваем обработчики на кнопки
+        document.querySelectorAll(".status-btn").forEach(btn => {
+            btn.addEventListener("click", async (e) => {
+                const bookingId = e.target.dataset.id;
+                const newStatus = e.target.dataset.status;
+
+                if (confirm(`Изменить статус на "${newStatus}"?`)) {
+                    try {
+                        const res = await fetch(`http://localhost:8080/api/bookings/${bookingId}/status`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": "Bearer " + localStorage.getItem("token")
+                            },
+                            body: JSON.stringify({ status: newStatus })
+                        });
+
+                        if (!res.ok) throw new Error("Ошибка при изменении статуса");
+
+                        alert("Статус изменён");
+                        location.reload(); // перезагрузка списка
+                    } catch (err) {
+                        console.error(err);
+                        alert("Не удалось изменить статус");
+                    }
+                }
+            });
+        });
       })
       .catch(error => {
           console.error('Error fetching bookings:', error);

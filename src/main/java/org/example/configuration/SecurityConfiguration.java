@@ -41,15 +41,23 @@ public class SecurityConfiguration {
                                         "/admin/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/cars").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.PUT, "/api/cars/**").hasRole("OWNER")
-                                .requestMatchers(HttpMethod.DELETE, "/api/cars/**").hasRole("OWNER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/cars/**").hasAnyRole("OWNER", "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/cars/owner").hasRole("OWNER")
-                                .requestMatchers(HttpMethod.GET, "/api/owner/booking").hasRole("OWNER")
+                                .requestMatchers(HttpMethod.GET, "/api/owner/bookings").hasRole("OWNER")
 
 
-                                .requestMatchers(HttpMethod.PUT, "/api/booking/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/booking").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/api/bookings/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/bookings").authenticated()
 
                                 .requestMatchers(HttpMethod.GET, "/api/cars/*/reviews").permitAll()
+
+                                .requestMatchers(HttpMethod.DELETE, "/api/users/me").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/api/users/me/bookings").authenticated()
+
+                                .requestMatchers(HttpMethod.GET, "/api/admin/users").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/admin/users/**").hasRole("ADMIN")
+
+
 
                                 .anyRequest().authenticated())
 
