@@ -7,13 +7,11 @@ import org.example.model.dto.*;
 import org.example.model.entity.User;
 import org.example.repository.UserRepository;
 import org.example.service.AuthService;
+import org.example.service.LogoutService;
 import org.example.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     final private AuthService authService;
+    final private LogoutService logoutService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponceDto> register(@RequestBody RegisterUserDto registerUserDto){
@@ -33,4 +32,11 @@ public class AuthController {
 
         return ResponseEntity.ok(authService.login(loginUserDto));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        logoutService.logout(token);
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
 }

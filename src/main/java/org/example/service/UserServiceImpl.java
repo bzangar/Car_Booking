@@ -11,6 +11,7 @@ import org.example.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -64,11 +65,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public RegisterUserDto updateCurrentUser(UserDetails userDetails, RegisterUserDto registerUserDto) {
+        PasswordEncoder passwordEncoder = passwordEncoder();
+
         User user = getUserByUsername(userDetails.getUsername());
         System.out.println("1; " + registerUserDto);
 
         user.setUsername(registerUserDto.getUsername());
-        user.setPassword(registerUserDto.getPassword());
+        user.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
         user.setFullName(registerUserDto.getFullName());
         userRepository.save(user);
         System.out.println(user);
@@ -94,5 +97,9 @@ public class UserServiceImpl implements UserService{
         userRepository.delete(user);
 
         return result;
+    }
+
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

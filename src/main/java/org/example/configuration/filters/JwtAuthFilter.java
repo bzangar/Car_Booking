@@ -5,7 +5,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.service.AuthService;
 import org.example.service.JwtService;
+import org.example.service.LogoutService;
 import org.example.service.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +25,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserService userService;
+    private final LogoutService logoutService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -37,6 +40,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         jwt = authHeader.substring(7).trim();
         username = jwtService.extractUsername(jwt);
+
+        if (logoutService.isBlacklisted(jwt)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is blacklisted");
+            return;
+        }
+
 
         if(Objects.nonNull(username) && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())){
             UserDetails userDetails = userService.loadUserByUsername(username);

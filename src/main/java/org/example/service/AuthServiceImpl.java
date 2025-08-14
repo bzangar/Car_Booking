@@ -5,8 +5,10 @@ import org.example.exception.UserNotFoundException;
 import org.example.model.dto.AuthResponceDto;
 import org.example.model.dto.LoginUserDto;
 import org.example.model.dto.RegisterUserDto;
+import org.example.model.entity.BlacklistedToken;
 import org.example.model.entity.User;
 import org.example.model.enums.Role;
+import org.example.repository.TokenBlacklistRepository;
 import org.example.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service

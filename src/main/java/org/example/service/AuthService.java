@@ -8,4 +8,5 @@ public interface AuthService {
     AuthResponceDto login(LoginUserDto loginUserDto);
 
     AuthResponceDto register(RegisterUserDto registerUserDto);
+
 }
