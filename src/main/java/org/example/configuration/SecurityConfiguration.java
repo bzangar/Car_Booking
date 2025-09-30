@@ -49,7 +49,6 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.GET, "/api/cars/owner").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.GET, "/api/owner/bookings").hasRole("OWNER")
 
-
                                 .requestMatchers(HttpMethod.PUT, "/api/bookings/**").hasRole("OWNER")
                                 .requestMatchers(HttpMethod.POST, "/api/bookings").authenticated()
 
@@ -62,8 +61,6 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.DELETE, "/api/admin/users/**").hasRole("ADMIN")
 
                                 .requestMatchers(HttpMethod.POST, "/api/cars/*/reviews").authenticated()
-
-
 
                                 .anyRequest().authenticated())
 
